@@ -1,5 +1,9 @@
 package com.example.android.farliggodtapp;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -14,6 +18,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
+    public double longitude, latitude;
+    public String lng, lat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +30,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
+    /**
+     *
+     * Getting the location, and making it into the two string elements lat and lng.
+     * This is using the GPS-sensor and not cell-towers and stuff to define location,
+     * and may therefore be slow to load location.
+     *
+     * */
+
+    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+    // If we want to get the last known location on startup, this line may be used:
+    //Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+    // Defining a listener that responds to location updates. This is only triggered when GPS is enabled and receives contact with satellites.
+    LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            // Called when a new location is found by the network location provider.
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+
+            lng = Double.toString(longitude);
+            lat = Double.toString(latitude);
+
+            // Call function here to do stuff with lat and lng
+        }
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+        public void onProviderEnabled(String provider) {}
+        public void onProviderDisabled(String provider) {}
+    };
+
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 
     /**
