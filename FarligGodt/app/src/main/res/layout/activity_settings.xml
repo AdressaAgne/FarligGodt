@@ -7,14 +7,73 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.android.farliggodtapp.settings">
+    tools:context="com.example.android.farliggodtapp.Settings">
+
 
     <TextView
+        android:id="@+id/spiselig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:text="Spislige arter"
-        android:textSize="16dp"/>
+        android:textSize="24dp" />
 
+    <TextView
+        android:id="@+id/radius"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spiselig"
+        android:layout_margin="10dp"
+        android:text="Radius"
+        android:textSize="24dp" />
+
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radius"
+        android:layout_margin="10dp"
+        android:text="Distance"
+        android:textSize="24dp" />
+
+    <CheckBox
+        android:id="@+id/km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance"
+        android:text="km" />
+
+    <CheckBox
+        android:id="@+id/miles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/km"
+        android:layout_below="@id/distance"
+        android:text="miles" />
+
+    <CheckBox
+        android:id="@+id/nautical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/miles"
+        android:layout_below="@id/distance"
+        android:text="nautical" />
+
+
+    <Switch
+        android:id="@+id/spiselig_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true" />
+
+    <SeekBar
+        android:id="@+id/radius_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/spiselig_switch"
+        android:layout_marginTop="30dp" />
 
 
 </RelativeLayout>
