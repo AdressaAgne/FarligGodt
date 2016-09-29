@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     android:layout_marginTop="0dp"
     android:paddingTop="0dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FFF">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:src="@drawable/logo"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        />
+        android:layout_marginRight="30dp" />
 
     <EditText
         android:layout_width="match_parent"
