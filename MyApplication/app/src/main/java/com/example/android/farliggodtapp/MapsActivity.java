@@ -21,6 +21,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public double longitude, latitude;
     public String lng, lat;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
