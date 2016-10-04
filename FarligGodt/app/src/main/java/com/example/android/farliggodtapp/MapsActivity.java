@@ -1,10 +1,14 @@
 package com.example.android.farliggodtapp;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -25,6 +29,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public String lng, lat;
 
+    static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,41 +40,83 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        /*
+        * Permission request for Android 6.0 and later
+        * */
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+
+
+        /**
+         *
+         * Getting the location, and making it into the two string elements lat and lng.
+         * This is using the GPS-sensor and not cell-towers and stuff to define location,
+         * and may therefore be slow to load location.
+         *
+         * */
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // If we want to get the last known location on startup, this line may be used:
+        //Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        // Defining a listener that responds to location updates. This is only triggered when GPS is enabled and receives contact with satellites.
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+
+                lng = Double.toString(longitude);
+                lat = Double.toString(latitude);
+
+                // Call function here to do stuff with lat and lng
+
+                Log.v("Latlong", lat + "og" + lng);
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (android.location.LocationListener) locationListener);
+
     }
 
-    /**
-     *
-     * Getting the location, and making it into the two string elements lat and lng.
-     * This is using the GPS-sensor and not cell-towers and stuff to define location,
-     * and may therefore be slow to load location.
-     *
-     * */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-    // If we want to get the last known location on startup, this line may be used:
-    //Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-    // Defining a listener that responds to location updates. This is only triggered when GPS is enabled and receives contact with satellites.
-    LocationListener locationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            // Called when a new location is found by the network location provider.
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-
-            lng = Double.toString(longitude);
-            lat = Double.toString(latitude);
-
-            // Call function here to do stuff with lat and lng
+                    // Register the listener with the Location Manager to receive location updates
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
         }
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-        public void onProviderEnabled(String provider) {}
-        public void onProviderDisabled(String provider) {}
-    };
-
-    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
