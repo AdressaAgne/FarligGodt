@@ -7,6 +7,14 @@
     android:orientation="vertical"
     android:paddingTop="0dp">
 
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:onClick="openSettings"
+        />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
