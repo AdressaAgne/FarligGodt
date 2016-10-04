@@ -69,7 +69,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // If we want to get the last known location on startup, this line may be used:
-        //Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
+
+        lng = Double.toString(longitude);
+        lat = Double.toString(latitude);
+
+        Log.v("Latlong1", lat + "og" + lng);
 
         // Defining a listener that responds to location updates. This is only triggered when GPS is enabled and receives contact with satellites.
         LocationListener locationListener = new LocationListener() {
@@ -83,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // Call function here to do stuff with lat and lng
 
-                Log.v("Latlong", lat + "og" + lng);
+                Log.v("Latlong2", lat + "og" + lng);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
