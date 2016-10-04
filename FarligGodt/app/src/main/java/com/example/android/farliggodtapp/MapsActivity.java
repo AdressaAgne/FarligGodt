@@ -42,9 +42,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        /*
-        * Permission request for Android 6.0 and later
-        * */
+
+        /* *
+         * Permission request for Android 6.0 and later
+         * */
 
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
@@ -58,17 +59,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-        /**
+        /* *
          *
          * Getting the location, and making it into the two string elements lat and lng.
-         * This is using the GPS-sensor and not cell-towers and stuff to define location,
-         * and may therefore be slow to load location.
+         * Uses first the last known location, and later the GPS-location.
          *
          * */
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        // If we want to get the last known location on startup, this line may be used:
+        // Gets the last known location while waiting for GPS-connection:
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         longitude = location.getLongitude();
         latitude = location.getLatitude();
@@ -76,9 +76,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         lng = Double.toString(longitude);
         lat = Double.toString(latitude);
 
-        Log.v("Latlong1", lat + "og" + lng);
+        Log.v("Latlong1", lat + " and " + lng);
 
-        // Defining a listener that responds to location updates. This is only triggered when GPS is enabled and receives contact with satellites.
+        // Defining a listener that responds to location updates.
+        // This is only triggered when GPS is enabled and receives contact with satellites.
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
@@ -90,7 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // Call function here to do stuff with lat and lng
 
-                Log.v("Latlong2", lat + "og" + lng);
+                Log.v("Latlong2", lat + " and " + lng);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -107,6 +108,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    /* *
+     * Permission request for Android 6.0 and later
+     * */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -125,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-    /**
+    /* *
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
@@ -133,7 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
-     */
+     * */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
