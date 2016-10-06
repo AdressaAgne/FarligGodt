@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FarligGodtApp</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="app_name">FarligGodt</string>
+    <string name="title_activity_maps">Farlig Godt</string>
     <string name="title_activity_settings">settings</string>
 </resources>
