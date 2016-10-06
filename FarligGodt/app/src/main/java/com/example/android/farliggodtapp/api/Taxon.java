@@ -1,5 +1,7 @@
 package com.example.android.farliggodtapp.api;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 /**
@@ -12,8 +14,8 @@ public class Taxon implements JSONpop {
     public String name;
     public Double lat;
     public Double lng;
-    public int taxonID;
-    public double distance;
+    public String taxonID;
+    public String distance;
 
     public String getName() {
         return name;
@@ -27,22 +29,22 @@ public class Taxon implements JSONpop {
         return lng;
     }
 
-    public int getTaxonID() {
+    public String getTaxonID() {
         return taxonID;
     }
 
-    public double getDistance() {
+    public String getDistance() {
         return distance;
     }
 
     @Override
     public void populate(JSONObject data) {
 
-        name = data.optString("navn");
-        lat = data.optDouble("lat");
-        lng = data.optDouble("lng");
-        taxonID = data.optInt("taxonID");
-        distance = data.optDouble("distance");
+        name        = data.optString("navn");
+        lat         = data.optDouble("lat");
+        lng         = data.optDouble("lng");
+        taxonID     = data.optString("taxonID");
+        distance    = data.optString("distance");
 
     }
 }

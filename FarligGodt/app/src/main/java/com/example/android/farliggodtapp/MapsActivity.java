@@ -13,6 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 
+import com.example.android.farliggodtapp.api.Api;
+import com.example.android.farliggodtapp.api.ApiCallback;
+import com.example.android.farliggodtapp.api.Taxon;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,11 +24,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ApiCallback {
 
     private GoogleMap mMap;
 
     public double longitude, latitude;
+
+    public Api taxonApi;
 
     public String lng, lat;
 
@@ -41,6 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        taxonApi = new Api(this);
 
         /* *
          * Permission request for Android 6.0 and later
@@ -69,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Gets the last known location while waiting for GPS-connection:
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
+        if (location != null){
             longitude = location.getLongitude();
             latitude = location.getLatitude();
 
@@ -78,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Log.v("Latlong1", lat + " and " + lng);
         }
+
 
 
         // Defining a listener that responds to location updates.
@@ -108,6 +117,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
+
+        taxonApi.refreshQuery(latitude, longitude, 25);
     }
 
     /* *
@@ -131,7 +142,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
     /* *
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -145,10 +155,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng current = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(current).title("yay"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -168,4 +181,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(i);
     }
 
+    @Override
+    public void serviceSuccess(Taxon[] taxons) {
+
+        //do stuff when the api fetches stuff
+        int dataLength = taxons.length;
+        for (int i = 0; i < dataLength; i++) {
+
+            taxons[i].getLat();
+            LatLng taxonLatLng = new LatLng(taxons[i].getLat(), taxons[i].getLng());
+            mMap.addMarker(new MarkerOptions().position(taxonLatLng).title(taxons[i].getName()));
+        }
+
+    }
+
+    @Override
+    public void serviceFailed(Exception exc) {
+
+    }
 }
