@@ -20,6 +20,10 @@ public class Settings extends AppCompatActivity {
     SeekBar seekBarRadius;
     int progress = 25;
 
+    private final double km_to_miles = 0.621371192;
+    private final double km_to_nautical = 0.539957;
+    private String type = "km";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,25 +31,85 @@ public class Settings extends AppCompatActivity {
 
         db = new DatabaseHelper(this);
 
+
+        // Radio Buttons
+
+        RadioGroup distanceType = (RadioGroup) findViewById(R.id.distanceType);
+        Button km = (RadioButton) findViewById(R.id.km);
+        Button miles = (RadioButton) findViewById(R.id.miles);
+        Button nautical = (RadioButton) findViewById(R.id.nautical);
+
+        if(db.fetchType("distanceType") == null){
+            db.updateOrInsert("distanceType", "km");
+        }
+
+        switch (db.fetchType("distanceType")){
+
+            case "km":
+                distanceType.check(R.id.km);
+                type = "km";
+                break;
+            case "miles":
+                distanceType.check(R.id.miles);
+                type = "Miles";
+                break;
+            case "nautical":
+                distanceType.check(R.id.nautical);
+                type = "Nautical";
+                break;
+            default:
+                distanceType.check(R.id.km);
+                break;
+        }
+
+        km.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.updateOrInsert("distanceType", "km");
+                type = "km";
+                updateRangeText(Integer.parseInt(db.fetchType("radius")));
+            }
+        });
+
+        miles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.updateOrInsert("distanceType", "miles");
+                type = "Miles";
+                updateRangeText(Integer.parseInt(db.fetchType("radius")));
+            }
+        });
+
+        nautical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.updateOrInsert("distanceType", "nautical");
+                type = "Nautical";
+                updateRangeText(Integer.parseInt(db.fetchType("radius")));
+            }
+        });
+
+
         //////////////// SEEKBAR FOR RADIUS ///////////////////////
 
         seekBarRadius = (SeekBar) findViewById(R.id.radius_bar);
-        seekBarRadius.setMax(100);
+        seekBarRadius.setMax(50);
 
         progress = Integer.parseInt(db.fetchType("radius"));
         seekBarRadius.setProgress(progress);
 
         textViewRadius = (TextView) findViewById(R.id.radiusNumber);
-        textViewRadius.setText(progress + " km");
+        textViewRadius.setText(progress + " " + type);
 
         seekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                // 1km in miles 0.621371192, 1mile in km 1.609344
-                progress = i;
-                textViewRadius.setText(progress + "km");
+
                 db.updateOrInsert("radius", Integer.toString(i));
+
+                updateRangeText(i);
+
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -58,50 +122,22 @@ public class Settings extends AppCompatActivity {
         });
 
 
-        // Radio Buttons
+        updateRangeText(Integer.parseInt(db.fetchType("radius")));
+    }
 
-        RadioGroup distanceType = (RadioGroup) findViewById(R.id.distanceType);
-        Button km = (RadioButton) findViewById(R.id.km);
-        Button miles = (RadioButton) findViewById(R.id.miles);
-        Button nautical = (RadioButton) findViewById(R.id.nautical);
+    public void updateRangeText(int i){
+        double value = i;
 
-        switch (db.fetchType("distanceType")){
-
-            case "km":
-                distanceType.check(R.id.km);
+        switch (type){
+            case "Miles":
+                value = i * km_to_miles;
                 break;
-            case "miles":
-                distanceType.check(R.id.miles);
-                break;
-            case "nautical":
-                distanceType.check(R.id.nautical);
-                break;
-            default:
-                db.updateOrInsert("distanceType", "km");
+            case "Nautical":
+                value = i * km_to_nautical;
                 break;
         }
 
-
-        km.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.updateOrInsert("distanceType", "km");
-            }
-        });
-
-        miles.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.updateOrInsert("distanceType", "miles");
-            }
-        });
-
-        nautical.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.updateOrInsert("distanceType", "nautical");
-            }
-        });
+        textViewRadius.setText(String.format("%.1f", value) + " " + type);
     }
 
 
