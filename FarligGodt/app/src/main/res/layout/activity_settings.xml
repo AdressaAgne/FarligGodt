@@ -48,7 +48,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/distance">
+        android:layout_below="@id/distance"
+        android:id="@+id/distanceType">
 
         <RadioButton
             android:id="@+id/km"
