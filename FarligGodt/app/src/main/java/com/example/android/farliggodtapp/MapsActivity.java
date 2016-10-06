@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback {
 
     private GoogleMap mMap;
@@ -36,9 +38,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public String lng, lat;
 
     private DatabaseHelper db;
-
-    private LocationManager locationManager;
-    private LocationListener locationListener;
 
     static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
@@ -55,7 +54,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         db = new DatabaseHelper(this);
         taxonApi = new Api(this);
 
-        if (db.fetchType("radius") == null) {
+        if(db.fetchType("radius") == null){
             db.updateOrInsert("radius", "25");
         }
 
@@ -82,11 +81,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
          *
          * */
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // Gets the last known location while waiting for GPS-connection:
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
+        if (location != null){
             longitude = location.getLongitude();
             latitude = location.getLatitude();
 
@@ -97,9 +96,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
+
         // Defining a listener that responds to location updates.
         // This is only triggered when GPS is enabled and receives contact with satellites.
-        locationListener = new LocationListener() {
+        LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
                 longitude = location.getLongitude();
@@ -122,7 +122,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onProviderDisabled(String provider) {
             }
         };
-        requestLocation();
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
 
         taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
     }
@@ -139,17 +141,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    requestLocation();
+                    // Register the listener with the Location Manager to receive location updates
                 } else {
-
-                    // add a dialog that shows the users he/she can not use the app without gps
-
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
                 }
                 return;
             }
         }
     }
-
     /* *
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -165,19 +165,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Add a marker in Sydney and move the camera
         LatLng current = new LatLng(latitude, longitude);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 12));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current,12));
 
-
-    }
-
-    public void requestLocation(){
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            mMap.setMyLocationEnabled(true);
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        
+        mMap.setMyLocationEnabled(true);
     }
 
     // open next activity //
