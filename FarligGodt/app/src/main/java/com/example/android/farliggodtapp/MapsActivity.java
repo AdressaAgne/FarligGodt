@@ -16,6 +16,7 @@ import android.view.View;
 import com.example.android.farliggodtapp.api.Api;
 import com.example.android.farliggodtapp.api.ApiCallback;
 import com.example.android.farliggodtapp.api.Taxon;
+import com.example.android.farliggodtapp.database.DatabaseHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,6 +36,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public String lng, lat;
 
+    private DatabaseHelper db;
+
     static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
 
@@ -47,8 +50,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        db = new DatabaseHelper(this);
         taxonApi = new Api(this);
+
+        if(db.fetchType("radius") == null){
+            db.updateOrInsert("radius", "25");
+        }
 
         /* *
          * Permission request for Android 6.0 and later
@@ -118,7 +125,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 
-        taxonApi.refreshQuery(latitude, longitude, 25);
+        taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
     }
 
     /* *
@@ -159,7 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Sydney and move the camera
         LatLng current = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(current).title("yay"));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(13.0f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

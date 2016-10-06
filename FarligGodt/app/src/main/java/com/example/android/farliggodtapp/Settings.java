@@ -1,7 +1,9 @@
 package com.example.android.farliggodtapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -26,13 +28,8 @@ public class Settings extends AppCompatActivity {
 
         seekBarRadius = (SeekBar) findViewById(R.id.radius_bar);
         seekBarRadius.setMax(100);
-        progress = Integer.parseInt(db.fetchType("radius"));;
 
-        if(progress == 0){
-            progress = 25;
-            db.updateOrInsert("radius", "25");
-        }
-
+        progress = Integer.parseInt(db.fetchType("radius"));
         seekBarRadius.setProgress(progress);
 
         textViewRadius = (TextView) findViewById(R.id.radiusNumber);
@@ -56,6 +53,12 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        ////////////////////////////////////////////////////////////////////////////////////
     }
+
+    // open next activity //
+    public void openMain(View view){
+        Intent i = new Intent(this, MapsActivity.class);
+        startActivity(i);
+    }
+
 }

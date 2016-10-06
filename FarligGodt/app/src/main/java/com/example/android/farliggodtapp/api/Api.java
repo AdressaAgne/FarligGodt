@@ -28,14 +28,14 @@ public class Api{
 
     private Double lat;
     private Double lng;
-    private int dist;
+    private String dist;
 
     public Api(ApiCallback callback) {
         this.callback = callback;
 
     }
 
-    public void refreshQuery(final Double lat, final Double lng, final int dist){
+    public void refreshQuery(final Double lat, final Double lng, final String dist){
         this.lat = lat;
         this.lng = lng;
         this.dist = dist;
@@ -46,7 +46,7 @@ public class Api{
                 //lat: 59.342836
                 //lng: 5.298503
                 //dist: 25
-                String endPoint = "https://webpro3.agne.no/nearby_api/"+Double.toString(lat)+"/"+Double.toString(lng)+"/"+Double.toString(dist);
+                String endPoint = "https://webpro3.agne.no/nearby_api/"+Double.toString(lat)+"/"+Double.toString(lng)+"/"+dist;
                 //String endPoint = "https://webpro3.agne.no/nearby_api/59.342836/5.298503/25";
 
 
