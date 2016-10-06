@@ -53,6 +53,7 @@
             android:layout_weight="1.50"
             android:background="#f8f8f8"
             android:paddingTop="5dp"
+            android:maxLines="1"
             android:paddingBottom="5dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
