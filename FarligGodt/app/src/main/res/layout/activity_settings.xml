@@ -81,7 +81,7 @@
         android:layout_marginBottom="30dp"
         android:switchMinWidth="20dp"
         android:switchPadding="10dp"
-        android:text="Edible spicies only"
+        android:text="Edible species only"
         android:textColor="#555"
         android:textSize="24dp" />
 
