@@ -73,17 +73,7 @@
             android:text="nautical" />
 
     </RadioGroup>
-
-    <Switch
-        android:id="@+id/spiselig_switch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:switchMinWidth="20dp"
-        android:switchPadding="10dp"
-        android:text="Edible species only"
-        android:textColor="#555"
-        android:textSize="24dp" />
+    
 
     <SeekBar
         android:id="@+id/radius_bar"
