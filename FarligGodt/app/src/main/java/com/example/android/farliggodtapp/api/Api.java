@@ -22,8 +22,8 @@ public class Api{
 
     private Exception error;
 
-    private String lat;
-    private String lng;
+    private Double lat;
+    private Double lng;
     private int dist;
 
     public Api(ApiCallback callback) {
@@ -31,7 +31,7 @@ public class Api{
 
     }
 
-    public void refreshQuery(final String location, final String lat, final String lng, final int dist){
+    public void refreshQuery(final String location, final Double lat, final Double lng, final int dist){
         this.lat = lat;
         this.lng = lng;
         this.dist = dist;
@@ -42,7 +42,7 @@ public class Api{
                 //lat: 59.342836
                 //lng: 5.298503
                 //dist: 25
-                String endPoint = "https://webpro3.agne.no/nearby_api/"+lat+"/"+lng+"/"+dist;
+                String endPoint = "https://webpro3.agne.no/nearby_api/"+Double.toString(lat)+"/"+Double.toString(lng)+"/"+Double.toString(dist);
 
                 try {
                     URL url = new URL(endPoint);

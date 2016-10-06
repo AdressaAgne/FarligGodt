@@ -10,8 +10,8 @@ import org.json.JSONObject;
 public class Taxon implements JSONpop {
 
     public String name;
-    public String lat;
-    public String lng;
+    public Double lat;
+    public Double lng;
     public int taxonID;
     public double distance;
 
@@ -19,11 +19,11 @@ public class Taxon implements JSONpop {
         return name;
     }
 
-    public String getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public String getLng() {
+    public Double getLng() {
         return lng;
     }
 
@@ -39,8 +39,8 @@ public class Taxon implements JSONpop {
     public void populate(JSONObject data) {
 
         name = data.optString("navn");
-        lat = data.optString("lat");
-        lng = data.optString("lng");
+        lat = data.optDouble("lat");
+        lng = data.optDouble("lng");
         taxonID = data.optInt("taxonID");
         distance = data.optDouble("distance");
 
