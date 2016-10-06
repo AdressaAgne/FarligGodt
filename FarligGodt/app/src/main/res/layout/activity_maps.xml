@@ -7,17 +7,24 @@
     android:orientation="vertical"
     android:paddingTop="0dp">
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <ImageButton
-        android:src="@drawable/settings"
         android:id="@+id/settingsButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:text="Settings"
-        android:scaleType="centerCrop"
+        android:layout_alignParentRight="true"
         android:background="#FFF"
-        android:padding="10dp"
         android:onClick="openSettings"
+        android:padding="12dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/settings"
+        android:text="Settings"
         />
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
