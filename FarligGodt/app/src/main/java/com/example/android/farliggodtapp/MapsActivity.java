@@ -8,8 +8,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -26,7 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ApiCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback {
 
     private GoogleMap mMap;
 
