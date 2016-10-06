@@ -70,13 +70,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Gets the last known location while waiting for GPS-connection:
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        longitude = location.getLongitude();
-        latitude = location.getLatitude();
+        if (location != null){
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
 
-        lng = Double.toString(longitude);
-        lat = Double.toString(latitude);
+            lng = Double.toString(longitude);
+            lat = Double.toString(latitude);
 
-        Log.v("Latlong1", lat + " and " + lng);
+            Log.v("Latlong1", lat + " and " + lng);
+        }
+
+
 
         // Defining a listener that responds to location updates.
         // This is only triggered when GPS is enabled and receives contact with satellites.
