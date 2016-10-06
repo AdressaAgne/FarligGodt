@@ -49,7 +49,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         taxonApi = new Api(this);
-        taxonApi.refreshQuery(59.342836, 5.298503, 25);
+
         /* *
          * Permission request for Android 6.0 and later
          * */
@@ -117,6 +117,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
+
+        taxonApi.refreshQuery(latitude, longitude, 25);
     }
 
     /* *
@@ -159,6 +161,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng current = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(current).title("yay"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
     }
 
     // open next activity //
