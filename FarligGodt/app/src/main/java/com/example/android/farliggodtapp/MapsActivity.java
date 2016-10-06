@@ -13,6 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 
+import com.example.android.farliggodtapp.api.Api;
+import com.example.android.farliggodtapp.api.ApiCallback;
+import com.example.android.farliggodtapp.api.Taxon;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,11 +25,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ApiCallback {
 
     private GoogleMap mMap;
 
     public double longitude, latitude;
+
+    public Api taxonApi;
 
     public String lng, lat;
 
@@ -43,6 +48,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
+        taxonApi = new Api(this);
+        taxonApi.refreshQuery(59.342836, 5.298503, 25);
         /* *
          * Permission request for Android 6.0 and later
          * */
@@ -146,10 +153,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng current = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(current).title("yay"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
     }
 
     // open next activity //
@@ -158,4 +167,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(i);
     }
 
+    @Override
+    public void serviceSuccess(Taxon[] taxons) {
+
+        //do stuff when the api fetches stuff
+        int dataLength = taxons.length;
+        for (int i = 0; i < dataLength; i++) {
+
+            taxons[i].getLat();
+            LatLng taxonLatLng = new LatLng(taxons[i].getLat(), taxons[i].getLng());
+            mMap.addMarker(new MarkerOptions().position(taxonLatLng).title(taxons[i].getName()));
+        }
+
+    }
+
+    @Override
+    public void serviceFailed(Exception exc) {
+
+    }
 }

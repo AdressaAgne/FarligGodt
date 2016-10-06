@@ -1,7 +1,9 @@
 package com.example.android.farliggodtapp.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,6 +12,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by orangee on 06/10/16.
@@ -31,7 +35,7 @@ public class Api{
 
     }
 
-    public void refreshQuery(final String location, final Double lat, final Double lng, final int dist){
+    public void refreshQuery(final Double lat, final Double lng, final int dist){
         this.lat = lat;
         this.lng = lng;
         this.dist = dist;
@@ -43,6 +47,9 @@ public class Api{
                 //lng: 5.298503
                 //dist: 25
                 String endPoint = "https://webpro3.agne.no/nearby_api/"+Double.toString(lat)+"/"+Double.toString(lng)+"/"+Double.toString(dist);
+                //String endPoint = "https://webpro3.agne.no/nearby_api/59.342836/5.298503/25";
+
+
 
                 try {
                     URL url = new URL(endPoint);
@@ -75,32 +82,34 @@ public class Api{
             protected void onPostExecute(String s) {
 
                 if(s == null && error != null){
+                    Log.d("taxon", "Error, could not fetch data");
                     callback.serviceFailed(error);
                     return;
                 }
 
+
                 try {
-                    JSONObject data = new JSONObject(s);
+                    JSONArray data = new JSONArray(s);
+                    int dataLength = data.length();
+                    Taxon[] taxons = new Taxon[dataLength];
 
-                    JSONObject queryResult = data.optJSONObject("");
 
-                    Taxon species = new Taxon();
-                    species.populate(queryResult);
+                    for (int i = 0; i < dataLength; i++) {
 
-                    callback.serviceSuccess(species);
+                        taxons[i] = new Taxon();
+                        taxons[i].populate(data.getJSONObject(i));
+
+                    }
+
+                    callback.serviceSuccess(taxons);
 
                 } catch (JSONException e) {
+                    Log.d("taxon", e.toString());
                     callback.serviceFailed(e);
                 }
 
 
             }
-        }.execute(location);
-    }
-
-    public class LocWeatherException extends Exception{
-        public LocWeatherException(String message) {
-            super(message);
-        }
+        }.execute();
     }
 }

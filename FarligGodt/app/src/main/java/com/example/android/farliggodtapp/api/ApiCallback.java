@@ -6,7 +6,7 @@ package com.example.android.farliggodtapp.api;
 
 public interface ApiCallback {
 
-    void serviceSuccess(Taxon taxon);
+    void serviceSuccess(Taxon[] taxon);
 
     void serviceFailed(Exception exc);
 
