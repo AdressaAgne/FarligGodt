@@ -35,6 +35,12 @@ public class Api{
 
     }
 
+    /**
+     * fetch data from api
+     * @param lat
+     * @param lng
+     * @param dist
+     */
     public void refreshQuery(final Double lat, final Double lng, final String dist){
         this.lat = lat;
         this.lng = lng;
@@ -43,14 +49,9 @@ public class Api{
             @Override
             protected String doInBackground(String... params) {
 
-                //lat: 59.342836
-                //lng: 5.298503
-                //dist: 25
+                //lat: 59,342836
+                //lng: 5,298503
                 String endPoint = "https://webpro3.agne.no/nearby_api/"+Double.toString(lat)+"/"+Double.toString(lng)+"/"+dist;
-                //String endPoint = "https://webpro3.agne.no/nearby_api/59.342836/5.298503/25";
-
-
-
                 try {
                     URL url = new URL(endPoint);
 

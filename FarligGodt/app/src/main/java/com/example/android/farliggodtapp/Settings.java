@@ -125,6 +125,10 @@ public class Settings extends AppCompatActivity {
         updateRangeText(Integer.parseInt(db.fetchType("radius")));
     }
 
+    /**
+     * Convert Km to miles or nautocal miles
+     * @param i
+     */
     public void updateRangeText(int i){
         double value = i;
 
@@ -141,7 +145,10 @@ public class Settings extends AppCompatActivity {
     }
 
 
-    // open next activity //
+    /**
+     * open Main Maps Activity
+     * @param view
+     */
     public void openMain(View view){
         Intent i = new Intent(this, MapsActivity.class);
         startActivity(i);
