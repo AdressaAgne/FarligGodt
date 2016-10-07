@@ -8,7 +8,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -44,8 +43,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    private boolean haveGpsPermit = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,22 +59,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             db.updateOrInsert("radius", "25");
         }
 
-        /* *
-         * Permission request for Android 6.0 and later
-         * */
+        requestFineLocationPermit();
 
+    }
+
+    /**
+     * Permission request for Android 6.0 and later
+     */
+    public void requestFineLocationPermit(){
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    new String[]{
+                            android.Manifest.permission.ACCESS_FINE_LOCATION
+                    },
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        } else {
+            requestLoc();
         }
-
-
-        requestLoc();
-
     }
 
     /**
@@ -87,8 +88,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * @param grantResults
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -99,9 +99,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     requestLoc();
 
                 } else {
-                    haveGpsPermit = false;
+                    requestFineLocationPermit();
                 }
-                return;
             }
         }
     }
@@ -112,22 +111,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void requestLoc(){
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            haveGpsPermit = false;
             return;
         }
+
+        //location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //setLatLng(location);
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        // This is only triggered when GPS is enabled and receives contact with satellites.
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                longitude = location.getLongitude();
-                latitude = location.getLatitude();
-
-                lng = Double.toString(longitude);
-                lat = Double.toString(latitude);
-
-                taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
+                setLatLng(location);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -140,18 +134,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
+    }
+
+    /**
+     * set the location vars and call the api
+     * @param location
+     */
+    public void setLatLng(Location location){
         if (location != null) {
             longitude = location.getLongitude();
             latitude = location.getLatitude();
 
             lng = Double.toString(longitude);
             lat = Double.toString(latitude);
+
+            taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
         }
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
     }
 
 
@@ -168,7 +168,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current,12));
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            haveGpsPermit = false;
             return;
         }
         mMap.setMyLocationEnabled(true);
