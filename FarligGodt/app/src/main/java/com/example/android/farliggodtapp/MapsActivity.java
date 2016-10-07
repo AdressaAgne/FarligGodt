@@ -1,5 +1,6 @@
 package com.example.android.farliggodtapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -33,11 +34,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public Api taxonApi;
 
-    public String lng, lat;
-
     private DatabaseHelper db;
 
     static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
+    private ProgressDialog apiProgress;
 
     private Location location;
     private LocationManager locationManager;
@@ -58,6 +59,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (db.fetchType("radius") == null) {
             db.updateOrInsert("radius", "25");
         }
+
+        apiProgress = new ProgressDialog(this);
+        apiProgress.setMessage("Loading species near you.");
+        apiProgress.show();
 
         requestFineLocationPermit();
 
@@ -121,7 +126,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                setLatLng(location);
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
+
+                LatLng current = new LatLng(latitude, longitude);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current,12));
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -134,24 +144,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 60000, locationListener);
 
-    }
-
-    /**
-     * set the location vars and call the api
-     * @param location
-     */
-    public void setLatLng(Location location){
-        if (location != null) {
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-
-            lng = Double.toString(longitude);
-            lat = Double.toString(latitude);
-
-            taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
-        }
     }
 
 
@@ -162,10 +156,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng current = new LatLng(latitude, longitude);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current,12));
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -188,11 +178,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void serviceSuccess(Taxon[] taxons) {
+        apiProgress.hide();
+        apiProgress.dismiss();
 
-        //do stuff when the api fetches stuff
         int dataLength = taxons.length;
         for (int i = 0; i < dataLength; i++) {
-
             taxons[i].getLat();
             LatLng taxonLatLng = new LatLng(taxons[i].getLat(), taxons[i].getLng());
             mMap.addMarker(new MarkerOptions().position(taxonLatLng).title(taxons[i].getName()));
