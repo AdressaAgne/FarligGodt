@@ -2,4 +2,10 @@
     <string name="app_name">FarligGodt</string>
     <string name="title_activity_maps">Farlig Godt</string>
     <string name="title_activity_settings">settings</string>
+    <string name="radius">Radius:</string>
+    <string name="distance_in">Distance in:</string>
+    <string name="km">km</string>
+    <string name="miles">miles</string>
+    <string name="nautical">nautical</string>
+    <string name="back">Back</string>
 </resources>

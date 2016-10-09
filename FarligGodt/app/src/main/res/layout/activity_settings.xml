@@ -14,7 +14,7 @@
         android:id="@+id/radius"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Radius: "
+        android:text="@string/radius"
         android:textColor="#555"
         android:layout_marginBottom="10dp"
         android:textSize="24dp" />
@@ -37,7 +37,7 @@
         android:layout_below="@+id/radius"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="40dp"
-        android:text="Distance in:"
+        android:text="@string/distance_in"
         android:textColor="#555"
         android:textSize="24dp" />
 
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:text="km"
+            android:text="@string/km"
             android:checked="true" />
 
         <RadioButton
@@ -62,13 +62,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:text="miles" />
+            android:text="@string/miles" />
 
         <RadioButton
             android:id="@+id/nautical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="nautical" />
+            android:text="@string/nautical" />
 
     </RadioGroup>
     
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Back"
+        android:text="@string/back"
         android:onClick="openMain" />
 
 </RelativeLayout>

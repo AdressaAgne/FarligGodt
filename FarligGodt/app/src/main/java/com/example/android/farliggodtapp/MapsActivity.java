@@ -15,7 +15,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.android.farliggodtapp.api.Api;
 import com.example.android.farliggodtapp.api.ApiCallback;
