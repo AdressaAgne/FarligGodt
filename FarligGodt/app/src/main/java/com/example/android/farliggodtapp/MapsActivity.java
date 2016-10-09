@@ -26,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.api.model.StringList;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener {
@@ -64,7 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             db.updateOrInsert("radius", "25");
         }
         apiProgress = new ProgressDialog(this);
-        apiProgress.setMessage("Loading species near you.");
+        apiProgress.setMessage(getString(R.string.loadTaxonInit));
         apiProgress.show();
 
         requestFineLocationPermit();
@@ -221,17 +222,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void serviceFailed(Exception exc) {
-        String msg = "Could not load species, check your internet connection.";
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(msg)
+        builder.setMessage(R.string.errorAlert)
                 .setCancelable(false)
-                .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.tryAgain), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //do things
                     }
                 })
-                .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
                     }
@@ -247,7 +246,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapClick(LatLng latLng) {
         customLocation = true;
-        apiProgress.setMessage("Loading species near selected location.");
+        apiProgress.setMessage(getString(R.string.loadTaxon));
         apiProgress.show();
 
         taxonApi.refreshQuery(latLng.latitude, latLng.longitude, db.fetchType("radius"));

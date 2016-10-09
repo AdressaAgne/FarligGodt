@@ -23,6 +23,7 @@ public class Settings extends AppCompatActivity {
     private final double km_to_miles = 0.621371192;
     private final double km_to_nautical = 0.539957;
     private String type = "km";
+    private String textType = "km";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +49,17 @@ public class Settings extends AppCompatActivity {
             case "km":
                 distanceType.check(R.id.km);
                 type = "km";
+                textType = getString(R.string.km);
                 break;
             case "miles":
                 distanceType.check(R.id.miles);
                 type = "Miles";
+                textType = getString(R.string.miles);
                 break;
             case "nautical":
                 distanceType.check(R.id.nautical);
                 type = "Nautical";
+                textType = getString(R.string.nautical);
                 break;
             default:
                 distanceType.check(R.id.km);
@@ -99,7 +103,7 @@ public class Settings extends AppCompatActivity {
         seekBarRadius.setProgress(progress);
 
         textViewRadius = (TextView) findViewById(R.id.radiusNumber);
-        textViewRadius.setText(progress + " " + type);
+        textViewRadius.setText(progress + " " + textType);
 
         seekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -141,7 +145,7 @@ public class Settings extends AppCompatActivity {
                 break;
         }
 
-        textViewRadius.setText(String.format("%.1f", value) + " " + type);
+        textViewRadius.setText(String.format("%.1f", value) + " " + textType);
     }
 
 

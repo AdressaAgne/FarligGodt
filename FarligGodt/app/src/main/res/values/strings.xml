@@ -8,4 +8,9 @@
     <string name="miles">miles</string>
     <string name="nautical">nautical</string>
     <string name="back">Back</string>
+    <string name="errorAlert">Could not load species, check your internet connection.</string>
+    <string name="loadTaxon">Loading species near selected location.</string>
+    <string name="loadTaxonInit">Loading species near you.</string>
+    <string name="ok">Ok</string>
+    <string name="tryAgain">Try Again</string>
 </resources>
