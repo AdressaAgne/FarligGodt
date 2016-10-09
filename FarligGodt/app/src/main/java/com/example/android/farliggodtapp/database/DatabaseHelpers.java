@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by Agne Ødegaard on 06/10/16.
  */
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelpers extends SQLiteOpenHelper {
 
     private static final String databaseName = "FarligGodt.db";
     private static final String tableName = "saved";
@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String tableColType = "type";
 
 
-    public DatabaseHelper(Context context) {
+    public DatabaseHelpers(Context context) {
         super(context, databaseName, null, 1);
     }
 
