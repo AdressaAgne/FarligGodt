@@ -78,7 +78,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int result = db.update(tableName, cv, tableColType + " = ?", new String[] {String.valueOf(type) });
 
         return result > -1;
-
     }
 
     /**

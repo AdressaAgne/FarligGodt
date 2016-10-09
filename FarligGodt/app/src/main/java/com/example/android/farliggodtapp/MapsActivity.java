@@ -1,7 +1,9 @@
 package com.example.android.farliggodtapp;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -9,8 +11,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +49,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+    private boolean customLocation = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +66,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (db.fetchType("radius") == null) {
             db.updateOrInsert("radius", "25");
         }
-
         apiProgress = new ProgressDialog(this);
         apiProgress.setMessage("Loading species near you.");
         apiProgress.show();
@@ -127,12 +132,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-                taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
+                if(!customLocation) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                    taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
 
-                LatLng current = new LatLng(latitude, longitude);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current,12));
+                    LatLng current = new LatLng(latitude, longitude);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 12));
+                }
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -157,23 +164,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
-       //try {
-       //    // Customise the styling of the base map using a JSON object defined
-       //    // in a raw resource file.
-       //    boolean success = mMap.setMapStyle(
-       //            MapStyleOptions.loadRawResourceStyle(
-       //                    this, R.raw.mapStyle));
-
-       //
-       //    if (!success) {
-       //        Log.e("MapsActivityRaw", "Style parsing failed.");
-       //    }
-       //} catch (Resources.NotFoundException e) {
-       //    Log.e("MapsActivityRaw", "Can't find style.", e);
-       //}
-
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -214,11 +204,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void serviceFailed(Exception exc) {
+        String msg = "Could not load species, check your internet connection.";
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //do things
+                    }
+                })
+                .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
-        //todo: click a place set the location and zoom there and load species there.
+        customLocation = true;
+        apiProgress.setMessage("Loading species near selected location.");
+        apiProgress.show();
+
+        taxonApi.refreshQuery(latLng.latitude, latLng.longitude, db.fetchType("radius"));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
     }
 }
