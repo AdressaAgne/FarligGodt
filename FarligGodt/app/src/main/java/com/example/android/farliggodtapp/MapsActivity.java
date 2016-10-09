@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -74,7 +75,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * when menu is created
-     * @param menu
+     * @param menu Menu
      * @return
      */
     @Override
@@ -85,7 +86,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * when a menu item is selected/clicked
-     * @param item
+     * @param item MenuItem
      * @return
      */
     @Override
@@ -121,9 +122,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Permission request for Android 6.0 and later
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * @param requestCode int
+     * @param permissions string array
+     * @param grantResults int array
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -186,7 +187,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Google maps init
-     * @param googleMap
+     * @param googleMap mMap
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -200,7 +201,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Api successfully got data
-     * @param taxons
+     * @param taxons array of Taxon
      */
     @Override
     public void serviceSuccess(Taxon[] taxons) {
@@ -208,17 +209,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         apiProgress.dismiss();
 
         int dataLength = taxons.length;
-        for (int i = 0; i < dataLength; i++) {
-            taxons[i].getLat();
-            LatLng taxonLatLng = new LatLng(taxons[i].getLat(), taxons[i].getLng());
-            mMap.addMarker(new MarkerOptions().position(taxonLatLng).title(taxons[i].getName()));
+        for (Taxon taxon : taxons) {
+            taxon.getLat();
+            LatLng taxonLatLng = new LatLng(taxon.getLat(), taxon.getLng());
+            mMap.addMarker(new MarkerOptions().position(taxonLatLng).title(taxon.getName()));
         }
 
     }
 
     /**
      * Api service failed to get data
-     * @param exc
+     * @param exc error msg
      */
     @Override
     public void serviceFailed(Exception exc) {
@@ -241,10 +242,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * When the map fragment is clicked
-     * @param latLng
+     * @param latLng coords
      */
     @Override
     public void onMapClick(LatLng latLng) {
+        Log.v("gps", "ClickOnMap");
         customLocation = true;
         apiProgress.setMessage(getString(R.string.loadTaxon));
         apiProgress.show();
