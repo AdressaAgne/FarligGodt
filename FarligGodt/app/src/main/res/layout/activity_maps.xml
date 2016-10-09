@@ -13,20 +13,6 @@
         android:layout_height="wrap_content"
         android:background="#f8f8f8">
 
-    <ImageButton
-        android:id="@+id/settingsButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentRight="true"
-        android:onClick="openSettings"
-        android:background="#f8f8f8"
-        android:padding="12dp"
-        android:layout_marginTop="10dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/settings"
-        android:text="Settings"
-        />
-
         <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
