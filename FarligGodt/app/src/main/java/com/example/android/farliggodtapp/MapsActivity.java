@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,7 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener {
 
     private GoogleMap mMap;
 
@@ -157,6 +158,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+       //try {
+       //    // Customise the styling of the base map using a JSON object defined
+       //    // in a raw resource file.
+       //    boolean success = mMap.setMapStyle(
+       //            MapStyleOptions.loadRawResourceStyle(
+       //                    this, R.raw.mapStyle));
+
+       //
+       //    if (!success) {
+       //        Log.e("MapsActivityRaw", "Style parsing failed.");
+       //    }
+       //} catch (Resources.NotFoundException e) {
+       //    Log.e("MapsActivityRaw", "Can't find style.", e);
+       //}
+
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -197,5 +215,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void serviceFailed(Exception exc) {
 
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        //todo: click a place set the location and zoom there and load species there.
     }
 }
