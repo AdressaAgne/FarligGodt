@@ -18,7 +18,7 @@ public class Settings extends AppCompatActivity {
 
     TextView textViewRadius;
     SeekBar seekBarRadius;
-    int progress = 25;
+    int progress;
 
     private final double km_to_miles = 0.621371192;
     private final double km_to_nautical = 0.539957;

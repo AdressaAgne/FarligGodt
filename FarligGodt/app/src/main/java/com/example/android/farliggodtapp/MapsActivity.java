@@ -71,12 +71,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    /**
+     * when menu is created
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * when a menu item is selected/clicked
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -168,7 +178,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 60000, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 30000, locationListener);
 
     }
 
@@ -230,6 +240,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         alert.show();
     }
 
+    /**
+     * When the map fragment is clicked
+     * @param latLng
+     */
     @Override
     public void onMapClick(LatLng latLng) {
         customLocation = true;
