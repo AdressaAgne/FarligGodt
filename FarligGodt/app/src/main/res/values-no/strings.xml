@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FarligGodt</string>
+    <string name="loadTaxon">Laster arter i nærheten av valgte lokasjon</string>
+    <string name="loadTaxonInit">Later arter i nærheten</string>
+    <string name="ok">OK</string>
+    <string name="title_activity_maps">Farlig Godt</string>
+    <string name="title_activity_settings">Innstillinger</string>
+    <string name="tryAgain">Prøv igjen</string>
+    <string name="errorAlert">Kunne ikke laste inn arter, sjekk din internettilkobling</string>
+    <string name="back">Tilbake</string>
+    <string name="radius">Radius:</string>
+    <string name="nautical">Nautiske mil</string>
+    <string name="miles">Britiske miles</string>
+    <string name="km">km</string>
+    <string name="distance_in">Avstand i:</string>
+</resources>
