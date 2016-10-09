@@ -9,7 +9,7 @@
     <string name="tryAgain">Prøv igjen</string>
     <string name="errorAlert">Kunne ikke laste inn arter, sjekk din internettilkobling</string>
     <string name="back">Tilbake</string>
-    <string name="radius">Radius:</string>
+    <string name="radius">Radius: </string>
     <string name="nautical">Nautiske mil</string>
     <string name="miles">Britiske miles</string>
     <string name="km">km</string>
