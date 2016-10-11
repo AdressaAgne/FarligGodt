@@ -1,5 +1,6 @@
 package com.example.android.farliggodtapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,8 +21,6 @@ public class Settings extends AppCompatActivity {
     SeekBar seekBarRadius;
     int progress;
 
-    private final double km_to_miles = 0.621371192;
-    private final double km_to_nautical = 0.539957;
     private String type = "km";
     private String textType = "km";
 
@@ -138,14 +137,16 @@ public class Settings extends AppCompatActivity {
 
         switch (type){
             case "Miles":
+                double km_to_miles = 0.621371192;
                 value = i * km_to_miles;
                 break;
             case "Nautical":
+                double km_to_nautical = 0.539957;
                 value = i * km_to_nautical;
                 break;
         }
-
-        textViewRadius.setText(String.format("%.1f", value) + " " + textType);
+        @SuppressLint("DefaultLocale") String OneDecimal = String.format("%.1f", value);
+        textViewRadius.setText(OneDecimal + " " + textType);
     }
 
 

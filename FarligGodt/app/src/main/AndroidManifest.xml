@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
         android:allowBackup="true"
@@ -29,7 +29,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCcKh6encNNP9XR2PBjrhhL69LseaQw9-E" />
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".MapsActivity"
@@ -41,8 +41,11 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".Settings" android:label="Settings"></activity>
+        <activity
+            android:name=".Settings"
+            android:label="Settings" />
+
     </application>
-    <uses-feature android:name="android.hardware.location.gps" />
+
 
 </manifest>
