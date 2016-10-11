@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">FarligGodt</string>
     <string name="loadTaxon">Laster arter i nærheten av valgte lokasjon</string>
-    <string name="loadTaxonInit">Laster arter i nærheten</string>
+    <string name="loadTaxonInit">Leter etter GPS-tilkobling</string>
     <string name="ok">OK</string>
     <string name="title_activity_maps">Farlig Godt</string>
     <string name="title_activity_settings">Innstillinger</string>

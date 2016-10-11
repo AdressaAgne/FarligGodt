@@ -9,7 +9,7 @@
     <string name="nautical">Nautical miles</string>
     <string name="errorAlert">Could not load species, check your internet connection.</string>
     <string name="loadTaxon">Loading species near selected location.</string>
-    <string name="loadTaxonInit">Loading species near you.</string>
+    <string name="loadTaxonInit">Looking for GPS-location</string>
     <string name="ok">OK</string>
     <string name="tryAgain">Try Again</string>
     <string name="back">Save</string>
