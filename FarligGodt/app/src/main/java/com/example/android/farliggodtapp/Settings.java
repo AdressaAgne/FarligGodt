@@ -70,6 +70,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 db.updateOrInsert("distanceType", "km");
                 type = "km";
+                textType = getString(R.string.km);
                 updateRangeText(Integer.parseInt(db.fetchType("radius")));
             }
         });
@@ -79,6 +80,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 db.updateOrInsert("distanceType", "miles");
                 type = "Miles";
+                textType = getString(R.string.miles);
                 updateRangeText(Integer.parseInt(db.fetchType("radius")));
             }
         });
@@ -88,6 +90,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 db.updateOrInsert("distanceType", "nautical");
                 type = "Nautical";
+                textType = getString(R.string.nautical);
                 updateRangeText(Integer.parseInt(db.fetchType("radius")));
             }
         });
@@ -102,10 +105,10 @@ public class Settings extends AppCompatActivity {
         seekBarRadius.setProgress(progress);
 
         textViewRadius = (TextView) findViewById(R.id.radiusNumber);
-        textViewRadius.setText(progress + " " + textType);
+
+        updateRangeText(progress);
 
         seekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
@@ -123,9 +126,6 @@ public class Settings extends AppCompatActivity {
 
             }
         });
-
-
-        updateRangeText(Integer.parseInt(db.fetchType("radius")));
     }
 
     /**
@@ -145,14 +145,14 @@ public class Settings extends AppCompatActivity {
                 value = i * km_to_nautical;
                 break;
         }
-        @SuppressLint("DefaultLocale") String OneDecimal = String.format("%.1f", value);
-        textViewRadius.setText(OneDecimal + " " + textType);
+        @SuppressLint("DefaultLocale") String OneDecimal = String.format("%.1f", value) + " " + textType;
+        textViewRadius.setText(OneDecimal);
     }
 
 
     /**
      * open Main Maps Activity
-     * @param view
+     * @param view main
      */
     public void openMain(View view){
         Intent i = new Intent(this, MapsActivity.class);
