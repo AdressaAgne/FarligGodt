@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.android.farliggodtapp.api.Api;
 import com.example.android.farliggodtapp.api.ApiCallback;
@@ -153,10 +154,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        //location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        //setLatLng(location);
-
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        Location lastLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if(lastLoc != null){
+            latitude = lastLoc.getLatitude();
+            longitude = lastLoc.getLongitude();
+            taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
+        }
 
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
@@ -174,9 +180,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             public void onProviderEnabled(String provider) {
+                Toast.makeText(getBaseContext(), "GPS enabled", Toast.LENGTH_SHORT).show();
             }
 
             public void onProviderDisabled(String provider) {
+                Toast.makeText(getBaseContext(), "GPS disabled", Toast.LENGTH_SHORT).show();
             }
         };
 
