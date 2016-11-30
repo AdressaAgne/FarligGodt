@@ -27,8 +27,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.api.model.StringList;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener {
@@ -54,7 +54,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_maps);2
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -200,10 +200,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        MapStyleOptions mapStyle = MapStyleOptions.loadRawResourceStyle(
+                this, R.raw.mapstyle_json);
+        mMap.setMapStyle(mapStyle);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
+
         mMap.setMyLocationEnabled(true);
     }
 
@@ -220,7 +225,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (Taxon taxon : taxons) {
             taxon.getLat();
             LatLng taxonLatLng = new LatLng(taxon.getLat(), taxon.getLng());
-            mMap.addMarker(new MarkerOptions().position(taxonLatLng).title(taxon.getName()));
+            mMap.addMarker(new MarkerOptions()
+                    .position(taxonLatLng)
+                    .title(taxon.getName())
+                    .snippet("Get short description from database")
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.filnavn))
+                    //.anchor(0.0f, 1.0f)
+            );
         }
 
     }
