@@ -34,7 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener {
 
-    private GoogleMap mMap;
+    private GoogleMap mMap = null;
 
     public double longitude, latitude;
 
@@ -171,9 +171,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
                     taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
-
-                    LatLng current = new LatLng(latitude, longitude);
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 12));
+                    changeCamera(latitude, longitude);
                 }
             }
 
@@ -193,6 +191,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    public void changeCamera(double lat, double lng){
+        if(mMap == null) return;
+
+        LatLng current = new LatLng(lat, lng);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 12));
+
+
+    }
+
 
     /**
      * Google maps init
@@ -201,6 +208,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         MapStyleOptions mapStyle = MapStyleOptions.loadRawResourceStyle(
                 this, R.raw.mapstyle_json);
         mMap.setMapStyle(mapStyle);
@@ -208,8 +216,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
-
         mMap.setMyLocationEnabled(true);
     }
 
@@ -219,10 +225,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void serviceSuccess(Taxon[] taxons) {
+        if(mMap == null) return;
+
         apiProgress.hide();
         apiProgress.dismiss();
 
-        int dataLength = taxons.length;
         for (Taxon taxon : taxons) {
             taxon.getLat();
             LatLng taxonLatLng = new LatLng(taxon.getLat(), taxon.getLng());
@@ -230,9 +237,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .position(taxonLatLng)
                     .title(taxon.getName())
                     .snippet("Get short description from database")
-                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.filnavn))
-                    //.anchor(0.0f, 1.0f)
             );
+
+            //.icon(BitmapDescriptorFactory.fromResource(R.drawable.filnavn))
+            //.anchor(0.0f, 1.0f)
         }
 
     }
