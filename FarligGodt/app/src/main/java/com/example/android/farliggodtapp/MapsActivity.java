@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.MatrixCursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.example.android.farliggodtapp.api.Api;
@@ -26,7 +30,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -52,6 +55,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private boolean customLocation = false;
 
+    private SimpleCursorAdapter mAdapter;
+    private SearchView searchInput;
+    String[] SUGGESTIONS = {
+            "Thomas", "Mia", "Agne",
+            "Øyvind", "skjiitsekk", "Snerkefjas",
+            "Heisann", "Trolololol"
+    };
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +86,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         requestFineLocationPermit();
 
+
+        //Searchfield listener
+        searchInput = (SearchView)findViewById(R.id.search_input);
+        // Register the onClick listener with the implementation above
+        //searchInput.setOnClickListener(SearchFieldListener);
+        //searchInput.setOnKeyListener(SearchFieldListener);
+        searchInput.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Log.i("TEXT CHANGED", s);
+
+
+                return false;
+            }
+        });
+    }
+
+    private void populateAdapter(String query) {
+        final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "cityName" });
+        for (int i=0; i<SUGGESTIONS.length; i++) {
+            if (SUGGESTIONS[i].toLowerCase().startsWith(query.toLowerCase()))
+                c.addRow(new Object[] {i, SUGGESTIONS[i]});
+        }
+        mAdapter.changeCursor(c);
     }
 
     /**
@@ -282,4 +324,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         taxonApi.refreshQuery(latLng.latitude, latLng.longitude, db.fetchType("radius"));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
     }
+
+    //EventListener on searchInput
+    /*
+    private View.OnClickListener SearchFieldListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.i("info", "knapp trykket");
+
+            String[] SUGGESTIONS = {
+                    "Thomas", "Mia", "Agne",
+                    "Øyvind", "skjiitsekk", "Snerkefjas",
+                    "Heisann", "Trolololol"
+            };
+
+        }
+    };
+    */
 }

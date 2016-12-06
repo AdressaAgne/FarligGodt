@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.android.farliggodtapp.api.Taxon;
 import com.example.android.farliggodtapp.taxon.Specie;
 
 /**
@@ -69,7 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "(19, 'Bromopsis inermis', 'bladfaks', 0, 'HI - Høy risiko', 59895, 0, 'groupname', 1),\n" +
                 "(20, 'Bunias orientalis', 'russekål', 0, 'HI - Høy risiko', 61090, 0, 'groupname', 1),\n" +
                 "(21, 'Camelostrongylus mentulatus', '', 0, 'HI - Høy risiko', 85780, 0, 'groupname', 1),\n" +
-                "(22, 'Campanula glomerata \\'Superba\\'', 'prakttoppklokke', 0, 'HI - Høy risiko', 79967, 0, 'groupname', 1),\n" +
+                "(22, 'Campanula glomerata', 'prakttoppklokke', 0, 'HI - Høy risiko', 79967, 0, 'groupname', 1),\n" +
                 "(23, 'Campylopus introflexus', 'ribbesåtemose', 0, 'HI - Høy risiko', 64203, 0, 'groupname', 1),\n" +
                 "(24, 'Caragana arborescens', 'sibirertebusk', 0, 'HI - Høy risiko', 61867, 0, 'groupname', 1),\n" +
                 "(25, 'Carassius auratus', 'gullfisk', 0, 'HI - Høy risiko', 26114, 0, 'groupname', 1),\n" +
