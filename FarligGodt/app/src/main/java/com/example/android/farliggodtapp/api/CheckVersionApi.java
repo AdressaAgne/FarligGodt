@@ -36,7 +36,7 @@ public class CheckVersionApi {
             @Override
             protected String doInBackground(String... params) {
 
-                String endPoint = "https://farliggodt.agne.no/api/blacklist";
+                String endPoint = "https://farliggodt.agne.no/api/check";
                 try {
                     URL url = new URL(endPoint);
 
@@ -72,7 +72,6 @@ public class CheckVersionApi {
                     return;
                 }
 
-
                 try {
                     JSONArray data = new JSONArray(s);
                     JSONObject json = data.getJSONObject(0);
@@ -84,9 +83,6 @@ public class CheckVersionApi {
                     } else {
                         callback.onUptoDateVersion();
                     }
-
-
-
 
                     callback.versionAPISuccess(version);
 
