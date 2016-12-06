@@ -13,6 +13,25 @@
         android:id="@+id/search_input"
         />
 
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Search">
+        <requestFocus />
+    </AutoCompleteTextView>
+<!--
+    <MultiAutoCompleteTextView
+        android:id="@+id/multiAutoCompleteTextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/autoCompleteTextView1"
+        android:layout_alignLeft="@+id/autoCompleteTextView1"
+        android:layout_alignStart="@+id/autoCompleteTextView1"
+        android:hint="Multi Auto Complete " />
+-->
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
