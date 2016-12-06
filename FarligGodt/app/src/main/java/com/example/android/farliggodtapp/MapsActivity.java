@@ -106,14 +106,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //Searchfield listener
         speciesList = db.getBlacklistString();
+        if(speciesList != null){
+            AutoCompleteTextView searchbar = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView1);
 
-        AutoCompleteTextView searchbar = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView1);
+            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, speciesList);
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, speciesList);
+            searchbar.setAdapter(adapter);
 
-        searchbar.setAdapter(adapter);
+            searchbar.setThreshold(1);
+        }
 
-        searchbar.setThreshold(1);
 
 
     }
