@@ -334,6 +334,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void blacklistFailed(Exception exc) {
+        Log.v("blacklist", "blacklistFailed: " + exc.getMessage());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Failed to fetch blacklist data")
                 .setCancelable(false)
@@ -353,6 +354,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onOldVersion(String version) {
+        Log.v("blacklist", "onOldVersion: " + version);
+
         blacklist.fetch(version);
     }
 
@@ -363,6 +366,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void versionAPIFailed(Exception exc) {
+
+        Log.v("blacklist", "versionAPIFailed: " + exc.getMessage());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Failed to fetch version data")
                 .setCancelable(false)

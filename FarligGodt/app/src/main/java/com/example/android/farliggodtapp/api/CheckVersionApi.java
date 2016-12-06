@@ -73,9 +73,8 @@ public class CheckVersionApi {
                 }
 
                 try {
-                    JSONArray data = new JSONArray(s);
-                    JSONObject json = data.getJSONObject(0);
-                    String version = json.optString("version");
+                    JSONObject data = new JSONObject(s);
+                    String version = data.optString("version");
                     float v = Float.parseFloat(version);
                     float currentVersion = Float.parseFloat(db.fetchType("version"));
                     if(v > currentVersion){

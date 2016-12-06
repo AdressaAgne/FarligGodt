@@ -35,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + tableName + " (" + tableColValue + " VARCHAR(255), " + tableColType + " VARCHAR(255) PRIMARY KEY UNIQUE)");
 
         db.execSQL("CREATE TABLE `blacklist` (" +
-                "  `id` int(11) NOT NULL," +
+                "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "  `scientificName` varchar(255) NOT NULL," +
                 "  `navn` varchar(255) NOT NULL," +
                 "  `svalbard` tinyint(1) NOT NULL DEFAULT '0'," +
