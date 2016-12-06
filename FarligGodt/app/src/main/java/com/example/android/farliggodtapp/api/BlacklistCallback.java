@@ -6,7 +6,7 @@ package com.example.android.farliggodtapp.api;
 
 public interface BlacklistCallback {
 
-    void blacklistSuccess(Specie[] species);
+    void blacklistSuccess(Specie[] species, String version);
 
     void blacklistFailed(Exception exc);
 

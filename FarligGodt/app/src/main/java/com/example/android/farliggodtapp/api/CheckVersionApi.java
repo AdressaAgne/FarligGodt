@@ -1,10 +1,14 @@
 package com.example.android.farliggodtapp.api;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.android.farliggodtapp.database.DatabaseHelper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,18 +20,18 @@ import java.net.URLConnection;
  * Created by Agne Ødegaard on 06/12/2016.
  */
 
-public class FetchBlacklist {
-
+public class CheckVersionApi {
+    private DatabaseHelper db;
     private Exception error;
-    private BlacklistCallback callback;
+    private VersionCallback callback;
 
-    public FetchBlacklist(BlacklistCallback callback) {
+    public CheckVersionApi(VersionCallback callback, Context context) {
+        db = new DatabaseHelper(context);
         this.callback = callback;
-
     }
 
 
-    public void fetch(final String version){
+    public void checkVersion(){
         new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
@@ -64,29 +68,31 @@ public class FetchBlacklist {
             protected void onPostExecute(String s) {
 
                 if(s == null && error != null){
-                    callback.blacklistFailed(error);
+                    callback.versionAPIFailed(error);
                     return;
                 }
 
 
                 try {
                     JSONArray data = new JSONArray(s);
-                    int dataLength = data.length();
-                    Specie[] species = new Specie[dataLength];
-
-
-                    for (int i = 0; i < dataLength; i++) {
-
-                        species[i] = new Specie();
-                        species[i].populate(data.getJSONObject(i));
-
+                    JSONObject json = data.getJSONObject(0);
+                    String version = json.optString("version");
+                    float v = Float.parseFloat(version);
+                    float currentVersion = Float.parseFloat(db.fetchType("version"));
+                    if(v > currentVersion){
+                        callback.onOldVersion(version);
+                    } else {
+                        callback.onUptoDateVersion();
                     }
 
-                    callback.blacklistSuccess(species, version);
+
+
+
+                    callback.versionAPISuccess(version);
 
                 } catch (JSONException e) {
                     Log.d("taxon", e.toString());
-                    callback.blacklistFailed(e);
+                    callback.versionAPIFailed(e);
                 }
 
 
@@ -97,3 +103,4 @@ public class FetchBlacklist {
     }
 
 }
+

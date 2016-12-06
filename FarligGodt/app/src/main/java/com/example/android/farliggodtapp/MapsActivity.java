@@ -24,9 +24,11 @@ import android.widget.Toast;
 import com.example.android.farliggodtapp.api.Api;
 import com.example.android.farliggodtapp.api.ApiCallback;
 import com.example.android.farliggodtapp.api.BlacklistCallback;
+import com.example.android.farliggodtapp.api.CheckVersionApi;
 import com.example.android.farliggodtapp.api.FetchBlacklist;
 import com.example.android.farliggodtapp.api.Specie;
 import com.example.android.farliggodtapp.api.Taxon;
+import com.example.android.farliggodtapp.api.VersionCallback;
 import com.example.android.farliggodtapp.database.DatabaseHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,7 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener, BlacklistCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener, BlacklistCallback, VersionCallback {
 
     private GoogleMap mMap = null;
 
@@ -44,6 +46,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public Api taxonApi;
     public FetchBlacklist blacklist;
+    public CheckVersionApi versionApi;
 
     private DatabaseHelper db;
 
@@ -73,9 +76,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         db = new DatabaseHelper(this);
         taxonApi = new Api(this);
         blacklist = new FetchBlacklist(this);
+        versionApi = new CheckVersionApi(this, getApplicationContext());
+
+        versionApi.checkVersion();
 
         if (db.fetchType("radius") == null) {
             db.updateOrInsert("radius", "25");
+        }
+        if(db.fetchType("version") == null){
+            db.updateOrInsert("version", "0");
         }
         apiProgress = new ProgressDialog(this);
         apiProgress.setMessage(getString(R.string.loadTaxonInit));
@@ -316,12 +325,63 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void blacklistSuccess(Specie[] species) {
+    public void blacklistSuccess(Specie[] species, String version) {
+
+        db.updateBlacklist(species, version);
+
         Toast.makeText(getBaseContext(), "Fetching Blacklist Success", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void blacklistFailed(Exception exc) {
-        Toast.makeText(getBaseContext(), "Blacklist Featch Failed", Toast.LENGTH_LONG).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Failed to fetch blacklist data")
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.tryAgain), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        blacklist.fetch(db.fetchType("version"));
+                    }
+                })
+                .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // do nothing
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public void onOldVersion(String version) {
+        blacklist.fetch(version);
+    }
+
+    @Override
+    public void onUptoDateVersion() {
+        Toast.makeText(getBaseContext(), "Blacklist Up to date", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void versionAPIFailed(Exception exc) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Failed to fetch version data")
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.tryAgain), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        versionApi.checkVersion();
+                    }
+                })
+                .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                       // do nothing
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public void versionAPISuccess(String version) {
+
     }
 }
