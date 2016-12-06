@@ -23,6 +23,9 @@ import android.widget.Toast;
 
 import com.example.android.farliggodtapp.api.Api;
 import com.example.android.farliggodtapp.api.ApiCallback;
+import com.example.android.farliggodtapp.api.BlacklistCallback;
+import com.example.android.farliggodtapp.api.FetchBlacklist;
+import com.example.android.farliggodtapp.api.Specie;
 import com.example.android.farliggodtapp.api.Taxon;
 import com.example.android.farliggodtapp.database.DatabaseHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,17 +33,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener, BlacklistCallback {
 
     private GoogleMap mMap = null;
 
     public double longitude, latitude;
 
     public Api taxonApi;
+    public FetchBlacklist blacklist;
 
     private DatabaseHelper db;
 
@@ -56,18 +59,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private SearchView searchInput;
 
+    private String[] speciesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         db = new DatabaseHelper(this);
         taxonApi = new Api(this);
+        blacklist = new FetchBlacklist(this);
 
         if (db.fetchType("radius") == null) {
             db.updateOrInsert("radius", "25");
@@ -76,44 +81,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         apiProgress.setMessage(getString(R.string.loadTaxonInit));
         apiProgress.show();
 
+
+
+        String lastLat = db.fetchType("lastLat");
+        String lastLng = db.fetchType("lastLng");
+
+        if(lastLat != null && lastLng != null){
+            latitude = Double.parseDouble(lastLat);
+            longitude = Double.parseDouble(lastLng);
+            taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
+            changeCamera(latitude, longitude);
+        }
+
         requestFineLocationPermit();
 
-
         //Searchfield listener
+        speciesList = db.getBlacklistString();
 
-        AutoCompleteTextView text;
-        //MultiAutoCompleteTextView text1;
-        String[] skjiit={"Mia ","Thomas","Agne","Øyvind","ølksølks","Skjiitsekk"};
+        AutoCompleteTextView searchbar = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView1);
+
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, speciesList);
+
+        searchbar.setAdapter(adapter);
+
+        searchbar.setThreshold(1);
 
 
-
-        text=(AutoCompleteTextView)findViewById(R.id.autoCompleteTextView1);
-        //text1=(MultiAutoCompleteTextView)findViewById(R.id.multiAutoCompleteTextView1);
-
-        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,skjiit);
-
-        text.setAdapter(adapter);
-        text.setThreshold(1);
-
-        //text1.setAdapter(adapter);
-        //text1.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-        /*
-        searchInput = (SearchView)findViewById(R.id.search_input);
-        actv = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView1);
-        /*
-        searchInput.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                Log.i("TEXT CHANGED", s);
-                return false;
-            }
-        });
-        */
     }
 
     /**
@@ -212,6 +205,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
                     taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
+                    db.updateOrInsert("lastLat", Double.toString(latitude));
+                    db.updateOrInsert("lastLng", Double.toString(longitude));
                     changeCamera(latitude, longitude);
                 }
             }
@@ -249,10 +244,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        MapStyleOptions mapStyle = MapStyleOptions.loadRawResourceStyle(
-                this, R.raw.mapstyle_json);
-        mMap.setMapStyle(mapStyle);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -324,20 +315,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
     }
 
-    //EventListener on searchInput
-    /*
-    private View.OnClickListener SearchFieldListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Log.i("info", "knapp trykket");
+    @Override
+    public void blacklistSuccess(Specie[] species) {
+        Toast.makeText(getBaseContext(), "Fetching Blacklist Success", Toast.LENGTH_LONG).show();
+    }
 
-            String[] SUGGESTIONS = {
-                    "Thomas", "Mia", "Agne",
-                    "Øyvind", "skjiitsekk", "Snerkefjas",
-                    "Heisann", "Trolololol"
-            };
-
-        }
-    };
-    */
+    @Override
+    public void blacklistFailed(Exception exc) {
+        Toast.makeText(getBaseContext(), "Blacklist Featch Failed", Toast.LENGTH_LONG).show();
+    }
 }

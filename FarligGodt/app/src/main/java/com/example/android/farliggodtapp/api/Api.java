@@ -51,7 +51,7 @@ public class Api{
 
                 //lat: 59,342836
                 //lng: 5,298503
-                String endPoint = "https://webpro3.agne.no/nearby_api/"+Double.toString(lat)+"/"+Double.toString(lng)+"/"+dist;
+                String endPoint = "https://farliggodt.agne.no/api/nearby/"+Double.toString(lat)+"/"+Double.toString(lng)+"/"+dist;
                 try {
                     URL url = new URL(endPoint);
 

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.android.farliggodtapp.taxon.Specie;
+import com.example.android.farliggodtapp.api.Specie;
 
 /**
  * Created by Agne Ødegaard on 06/10/16.
@@ -308,7 +308,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public String[] getBlacklistString (){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM blacklist", new String[] {});
 
+        if(!c.moveToFirst()) {
+            c.close();
+            return null;
+        }
+
+        String[] blacklist = new String[c.getCount()];
+
+        while(c.moveToNext()){
+            blacklist[c.getPosition()] = c.getString(c.getColumnIndex("navn"));
+        }
+
+        c.close();
+
+        return blacklist;
+    }
 
 
     public Specie getSpecie(int id){
