@@ -14,4 +14,17 @@
     <string name="miles">Britiske miles</string>
     <string name="km">km</string>
     <string name="distance_in">Avstand i:</string>
+    <string name="january">Januar</string>
+    <string name="july">Juli</string>
+    <string name="june">Juni</string>
+    <string name="february">Februar</string>
+    <string name="december">Desember</string>
+    <string name="august">August</string>
+    <string name="april">April</string>
+    <string name="march">Mars</string>
+    <string name="may">Mai</string>
+    <string name="months">Månter</string>
+    <string name="november">November</string>
+    <string name="october">Oktober</string>
+    <string name="september">September</string>
 </resources>
