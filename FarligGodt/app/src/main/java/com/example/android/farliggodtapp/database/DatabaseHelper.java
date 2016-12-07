@@ -42,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "  `taxonID` int(11) NOT NULL," +
                 "  `canEat` tinyint(1) NOT NULL DEFAULT '0'," +
                 "  `family` varchar(255) NOT NULL," +
-                "  `image` int(11) NOT NULL" +
+                "  `image` varchar(255) NOT NULL" +
                 ")");
     }
 
@@ -101,7 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] blacklist = new String[c.getCount() - 1];
 
         while(c.moveToNext()){
-            Log.v("blacklist", c.getString(c.getColumnIndex("navn")));
+            Log.v("blacklist", c.getString(c.getColumnIndex("image")));
             blacklist[c.getPosition() - 1] = c.getString(c.getColumnIndex("navn"));
         }
 
@@ -134,6 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         tax.setLatin(c.getString(c.getColumnIndex("scientificName")));
         tax.setRisk(c.getString(c.getColumnIndex("risiko")));
         tax.setFamily(c.getString(c.getColumnIndex("family")));
+        tax.setImage(c.getString(c.getColumnIndex("image")));
 
         return tax;
     }

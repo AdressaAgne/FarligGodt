@@ -69,8 +69,6 @@ public class TaxonLocations {
                     callback.serviceFailed(error);
                     return;
                 }
-
-
                 try {
                     JSONArray data = new JSONArray(s);
                     int dataLength = data.length();

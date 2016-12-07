@@ -282,17 +282,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         apiProgress.dismiss();
 
         for (Taxon taxon : taxons) {
-            taxon.getLat();
+
             LatLng taxonLatLng = new LatLng(taxon.getLat(), taxon.getLng());
-            mMap.addMarker(new MarkerOptions()
+
+            Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(taxonLatLng)
-                    .title(taxon.getName())
+                    .title(taxon.getTaxonID())
                     .snippet("Tap for mer info")
             );
 
             mMap.setOnMarkerClickListener(this);
             //.icon(BitmapDescriptorFactory.fromResource(R.drawable.filnavn))
-            //.anchor(0.0f, 1.0f)
         }
 
     }
@@ -301,7 +301,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onMarkerClick(final Marker marker) {
 
         Intent i = new Intent(this, SpeciesActivity.class);
-        i.putExtra("navn", marker.getTitle());
+        i.putExtra("taxonID", marker.getTitle());
         startActivity(i);
 
         return false;

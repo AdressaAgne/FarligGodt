@@ -14,13 +14,13 @@ public class Specie implements JSONpop{
     private String risk;
     private String family;
     private boolean eatable;
-    private int image;
+    private String image;
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -75,13 +75,13 @@ public class Specie implements JSONpop{
     @Override
     public void populate(JSONObject data) {
 
-        id      = data.optInt("taxonID");
-        name    = data.optString("navn");
-        latin   = data.optString("scientificName");
-        risk    = data.optString("risiko");
-        family  = data.optString("family");
-        eatable = data.optBoolean("canEat");
-        image   = data.optInt("image");
+        this.id      = data.optInt("taxonID");
+        this.name    = data.optString("navn");
+        this.latin   = data.optString("scientificName");
+        this.risk    = data.optString("risiko");
+        this.family  = data.optString("family");
+        this.eatable = data.optBoolean("canEat");
+        this.image   = data.optString("image");
 
     }
 }
