@@ -74,7 +74,17 @@
             android:text="@string/nautical" />
 
     </RadioGroup>
-    
+
+    <TextView
+        android:id="@+id/months"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/distanceType"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/months"
+        android:textColor="#555"
+        android:textSize="24sp" />
 
     <SeekBar
         android:id="@+id/radius_bar"
@@ -91,5 +101,102 @@
         android:text="@string/back"
         android:onClick="openMain"
         tools:ignore="RtlCompat" />
+
+    <CheckBox
+        android:text="@string/january"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/months"
+        android:layout_alignParentStart="true"
+        android:id="@+id/checkBox1" />
+
+    <CheckBox
+        android:text="@string/february"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox2"
+        android:layout_below="@+id/checkBox1"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="@string/march"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox3"
+        android:layout_below="@+id/checkBox2"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="@string/april"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox4"
+        android:layout_below="@+id/checkBox3"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="@string/june"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBox5"
+        android:layout_alignStart="@+id/checkBox5"
+        android:id="@+id/checkBox6" />
+
+    <CheckBox
+        android:text="@string/july"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBox6"
+        android:layout_alignStart="@+id/checkBox6"
+        android:id="@+id/checkBox7" />
+
+    <CheckBox
+        android:text="@string/november"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBox10"
+        android:layout_alignStart="@+id/checkBox10"
+        android:id="@+id/checkBox11" />
+
+    <CheckBox
+        android:text="@string/october"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox10"
+        android:layout_below="@+id/checkBox9"
+        android:layout_alignStart="@+id/checkBox9" />
+
+    <CheckBox
+        android:text="@string/december"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox12"
+        android:layout_below="@+id/checkBox11"
+        android:layout_alignStart="@+id/checkBox11" />
+
+    <CheckBox
+        android:text="@string/august"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox8"
+        android:layout_below="@+id/checkBox7"
+        android:layout_alignStart="@+id/checkBox7" />
+
+    <CheckBox
+        android:text="@string/september"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox9"
+        android:layout_above="@+id/checkBox6"
+        android:layout_alignParentEnd="true" />
+
+    <CheckBox
+        android:text="@string/may"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox5"
+        android:layout_below="@+id/months"
+        android:layout_toEndOf="@+id/distance"
+        android:layout_marginStart="12dp" />
 
 </RelativeLayout>
