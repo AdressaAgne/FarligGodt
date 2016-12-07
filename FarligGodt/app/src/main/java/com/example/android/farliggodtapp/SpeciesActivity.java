@@ -59,6 +59,7 @@ public class SpeciesActivity extends AppCompatActivity implements ImageCallback 
     public void imageLoaded(Bitmap image) {
         ImageView imageView = (ImageView) findViewById(R.id.image);
         imageView.setImageBitmap(image);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 }
 
