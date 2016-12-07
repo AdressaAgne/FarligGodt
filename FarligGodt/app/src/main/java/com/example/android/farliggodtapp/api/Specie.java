@@ -14,6 +14,15 @@ public class Specie implements JSONpop{
     private String risk;
     private String family;
     private boolean eatable;
+    private int image;
+
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
+    }
 
     public String getName() {
         return name;
@@ -72,6 +81,7 @@ public class Specie implements JSONpop{
         risk    = data.optString("risiko");
         family  = data.optString("family");
         eatable = data.optBoolean("canEat");
+        image   = data.optInt("image");
 
     }
 }

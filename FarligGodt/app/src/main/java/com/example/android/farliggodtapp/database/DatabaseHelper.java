@@ -38,7 +38,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "  `scientificName` varchar(255) NOT NULL," +
                 "  `navn` varchar(255) NOT NULL," +
-                "  `svalbard` tinyint(1) NOT NULL DEFAULT '0'," +
                 "  `risiko` varchar(255) NOT NULL," +
                 "  `taxonID` int(11) NOT NULL," +
                 "  `canEat` tinyint(1) NOT NULL DEFAULT '0'," +
@@ -80,12 +79,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cv.put("risiko"         , specie.getRisk());
             cv.put("canEat"         , specie.isEatable());
             cv.put("family"         , specie.getFamily());
+            cv.put("image"          , specie.getImage());
 
             if(db.insert("blacklist", null, cv) < 0){
                 return false;
             }
         }
-        this.updateOrInsert("version", version);
+        this.updateData("version", version);
         return true;
     }
 
