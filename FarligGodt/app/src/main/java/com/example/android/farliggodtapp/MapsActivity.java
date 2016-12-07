@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.android.farliggodtapp.api.Api;
@@ -62,8 +61,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationListener locationListener;
 
     private boolean customLocation = false;
-
-    private SearchView searchInput;
 
     private String[] speciesList;
 

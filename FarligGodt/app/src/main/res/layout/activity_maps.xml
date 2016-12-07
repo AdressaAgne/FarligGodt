@@ -7,19 +7,11 @@
     android:paddingTop="0dp">
 
 
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/search_input"
-        />
-
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextView1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:hint="Search">
-        <requestFocus />
     </AutoCompleteTextView>
 <!--
     <MultiAutoCompleteTextView
