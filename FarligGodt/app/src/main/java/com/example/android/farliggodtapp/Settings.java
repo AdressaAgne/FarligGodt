@@ -135,21 +135,10 @@ public class Settings extends AppCompatActivity {
         });
 
 
-        ////////// Checkboxes for months //////////
-        CheckBox jan = (CheckBox) findViewById(R.id.checkBox1);
-        CheckBox feb = (CheckBox) findViewById(R.id.checkBox2);
-        CheckBox mar = (CheckBox) findViewById(R.id.checkBox3);
-        CheckBox apr = (CheckBox) findViewById(R.id.checkBox4);
-        CheckBox may = (CheckBox) findViewById(R.id.checkBox5);
-        CheckBox jun = (CheckBox) findViewById(R.id.checkBox6);
-        CheckBox jul = (CheckBox) findViewById(R.id.checkBox7);
-        CheckBox aug = (CheckBox) findViewById(R.id.checkBox8);
-        CheckBox sep = (CheckBox) findViewById(R.id.checkBox9);
-        CheckBox oct = (CheckBox) findViewById(R.id.checkBox10);
-        CheckBox nov = (CheckBox) findViewById(R.id.checkBox11);
-        CheckBox dec = (CheckBox) findViewById(R.id.checkBox12);
+        ////////// Checkboxes for season-filter //////////
+        CheckBox seasonCheck = (CheckBox) findViewById(R.id.seasonCheck);
 
-        jan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        seasonCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 if (buttonView.isChecked()) {
