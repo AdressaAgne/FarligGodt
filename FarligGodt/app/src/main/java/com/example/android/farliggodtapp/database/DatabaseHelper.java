@@ -110,6 +110,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return blacklist;
     }
 
+    public String getTaxonByName(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM blacklist WHERE navn LIKE ?", new String[] {"%"+String.valueOf(name)+"%"});
+
+        if(!c.moveToFirst()) {
+            c.close();
+            return null;
+        }
+
+        String taxonID = c.getString(c.getColumnIndex("taxonID"));
+        c.close();
+
+        return taxonID;
+    }
+
 
     public Specie getSpecie(int id){
         Specie tax = new Specie();
@@ -192,11 +208,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return null;
         }
 
-
         String val = c.getString(c.getColumnIndex(tableColValue));
         c.close();
         return val;
-
     }
 
     /**

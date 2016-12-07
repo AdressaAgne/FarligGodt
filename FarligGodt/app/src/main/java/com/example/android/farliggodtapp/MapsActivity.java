@@ -14,10 +14,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.farliggodtapp.api.Api;
@@ -37,6 +40,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Arrays;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMarkerClickListener, BlacklistCallback, VersionCallback {
@@ -111,13 +116,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         searchbar = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView1);
         setAutoCompleteSearch();
+
+
+        searchbar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    doSearch(searchbar.getText().toString());
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+    }
+
+    public void doSearch(String text){
+        String taxonID = db.getTaxonByName(text);
+        if(taxonID == null){
+            Toast.makeText(getBaseContext(), "No Result for " + text, Toast.LENGTH_LONG).show();
+            return;
+        }
+        taxonLocationsApi.refreshQuery(taxonID);
+
+        Log.v("blacklist", "you searched for " + text + " got id: " + taxonID);
     }
 
     public void setAutoCompleteSearch(){
         speciesList = db.getBlacklistString();
         if(speciesList != null){
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, speciesList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, speciesList);
 
             searchbar.setAdapter(adapter);
 
@@ -148,6 +178,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.action_settings:
                 Intent i = new Intent(this, Settings.class);
                 startActivity(i);
+                return true;
+
+            case R.id.action_search:
+                Log.v("blacklist", "search click");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -239,7 +273,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 30000, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 60000, locationListener);
 
     }
 
@@ -275,6 +309,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void serviceSuccess(Taxon[] taxons) {
         if(mMap == null) return;
 
+        Log.v("blacklist" , Arrays.toString(taxons));
+        mMap.clear();
         apiProgress.hide();
         apiProgress.dismiss();
 
@@ -285,7 +321,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(taxonLatLng)
                     .title(taxon.getTaxonID())
-                    .snippet("Tap for mer info")
             );
 
             mMap.setOnMarkerClickListener(this);
@@ -315,12 +350,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setCancelable(false)
                 .setPositiveButton(getString(R.string.tryAgain), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //do things
+                        taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
                     }
                 })
                 .setNegativeButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
+
                     }
                 });
         AlertDialog alert = builder.create();

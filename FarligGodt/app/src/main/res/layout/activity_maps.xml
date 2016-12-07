@@ -8,22 +8,23 @@
 
 
     <AutoCompleteTextView
+
         android:id="@+id/autoCompleteTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search">
-    </AutoCompleteTextView>
-<!--
-    <MultiAutoCompleteTextView
-        android:id="@+id/multiAutoCompleteTextView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_below="@+id/autoCompleteTextView1"
-        android:layout_alignLeft="@+id/autoCompleteTextView1"
-        android:layout_alignStart="@+id/autoCompleteTextView1"
-        android:hint="Multi Auto Complete " />
--->
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:hint="@string/search"
+        android:maxLines="1"
+        android:drawableStart="@drawable/places_ic_search"
+        android:drawablePadding="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@android:color/transparent"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        />
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"

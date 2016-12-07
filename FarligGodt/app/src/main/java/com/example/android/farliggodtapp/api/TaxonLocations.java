@@ -31,8 +31,6 @@ public class TaxonLocations {
             @Override
             protected String doInBackground(String... params) {
 
-                //lat: 59,342836
-                //lng: 5,298503
                 String endPoint = "https://farliggodt.agne.no/api/taxon/"+taxonID;
                 try {
                     URL url = new URL(endPoint);
@@ -77,6 +75,7 @@ public class TaxonLocations {
                     for (int i = 0; i < dataLength; i++) {
                         taxons[i] = new Taxon();
                         taxons[i].populate(data.getJSONObject(i));
+                        Log.v("blacklist", "data: " + taxons[i].getName());
                     }
 
                     callback.serviceSuccess(taxons);

@@ -47,6 +47,7 @@ public class SpeciesActivity extends AppCompatActivity implements ImageCallback 
         desc.setText(taxon.getRisk());
 
         setTitle(taxon.getName());
+
         String imageURL = "https://farliggodt.agne.no" + taxon.getImage();
         new FetchImage(this, imageURL);
 

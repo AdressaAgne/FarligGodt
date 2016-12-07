@@ -2,11 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_search"
+        android:title=""
+        android:icon="@drawable/places_ic_search"
+        app:showAsAction="ifRoom"
+        android:actionViewClass="android.widget.SearchView" />
+
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title=""
-        app:showAsAction="always">
-    </item>
+        app:showAsAction="ifRoom" />
+
+
+
 
 </menu>
