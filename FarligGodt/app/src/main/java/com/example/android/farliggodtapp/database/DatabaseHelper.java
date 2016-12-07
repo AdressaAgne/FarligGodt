@@ -98,11 +98,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return null;
         }
 
-        String[] blacklist = new String[c.getCount()];
+        String[] blacklist = new String[c.getCount() - 1];
 
         while(c.moveToNext()){
             Log.v("blacklist", c.getString(c.getColumnIndex("navn")));
-            blacklist[c.getPosition()] = c.getString(c.getColumnIndex("navn"));
+            blacklist[c.getPosition() - 1] = c.getString(c.getColumnIndex("navn"));
         }
 
         c.close();

@@ -41,6 +41,13 @@
             </intent-filter>
 
         </activity>
+
+
+        <activity
+            android:name=".SpeciesActivity"
+            android:label="Species">
+        </activity>
+
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings" />

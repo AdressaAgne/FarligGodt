@@ -20,7 +20,7 @@
         android:layout_alignBottom="@+id/imageView3"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="17dp"
-        android:id="@+id/textView2"
+        android:id="@+id/name"
         android:textSize="24sp"
         android:textColor="@color/wallet_bright_foreground_holo_dark" />
 

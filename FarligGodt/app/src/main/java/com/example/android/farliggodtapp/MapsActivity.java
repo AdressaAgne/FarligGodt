@@ -28,6 +28,7 @@ import com.example.android.farliggodtapp.api.CheckVersionApi;
 import com.example.android.farliggodtapp.api.FetchBlacklist;
 import com.example.android.farliggodtapp.api.Specie;
 import com.example.android.farliggodtapp.api.Taxon;
+import com.example.android.farliggodtapp.api.TaxonLocations;
 import com.example.android.farliggodtapp.api.VersionCallback;
 import com.example.android.farliggodtapp.database.DatabaseHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,10 +36,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMapClickListener, BlacklistCallback, VersionCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMarkerClickListener, BlacklistCallback, VersionCallback {
 
     private GoogleMap mMap = null;
 
@@ -47,6 +49,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public Api taxonApi;
     public FetchBlacklist blacklist;
     public CheckVersionApi versionApi;
+    public TaxonLocations taxonLocationsApi;
 
     private DatabaseHelper db;
 
@@ -64,6 +67,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private String[] speciesList;
 
+    private AutoCompleteTextView searchbar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         db = new DatabaseHelper(this);
         taxonApi = new Api(this);
+        taxonLocationsApi = new TaxonLocations(this);
         blacklist = new FetchBlacklist(this);
         versionApi = new CheckVersionApi(this, getApplicationContext());
 
@@ -104,20 +111,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         requestFineLocationPermit();
 
-        //Searchfield listener
+
+        searchbar = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView1);
+        setAutoCompleteSearch();
+    }
+
+    public void setAutoCompleteSearch(){
         speciesList = db.getBlacklistString();
         if(speciesList != null){
-            AutoCompleteTextView searchbar = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView1);
 
-            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, speciesList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, speciesList);
 
             searchbar.setAdapter(adapter);
 
             searchbar.setThreshold(1);
         }
-
-
-
     }
 
     /**
@@ -216,8 +224,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
                     taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
-                    db.updateOrInsert("lastLat", Double.toString(latitude));
-                    db.updateOrInsert("lastLng", Double.toString(longitude));
+                   // db.updateOrInsert("lastLat", Double.toString(latitude));
+                   // db.updateOrInsert("lastLng", Double.toString(longitude));
                     changeCamera(latitude, longitude);
                 }
             }
@@ -279,13 +287,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.addMarker(new MarkerOptions()
                     .position(taxonLatLng)
                     .title(taxon.getName())
-                    .snippet("Get short description from database")
+                    .snippet("Tap for mer info")
             );
 
+            mMap.setOnMarkerClickListener(this);
             //.icon(BitmapDescriptorFactory.fromResource(R.drawable.filnavn))
             //.anchor(0.0f, 1.0f)
         }
 
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+
+        Intent i = new Intent(this, SpeciesActivity.class);
+        i.putExtra("navn", marker.getTitle());
+        startActivity(i);
+
+        return false;
     }
 
     /**
@@ -311,26 +330,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         alert.show();
     }
 
-    /**
-     * When the map fragment is clicked
-     * @param latLng coords
-     */
-    @Override
-    public void onMapClick(LatLng latLng) {
-        Log.v("gps", "ClickOnMap");
-        customLocation = true;
-        apiProgress.setMessage(getString(R.string.loadTaxon));
-        apiProgress.show();
-
-        taxonApi.refreshQuery(latLng.latitude, latLng.longitude, db.fetchType("radius"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
-    }
 
     @Override
     public void blacklistSuccess(Specie[] species, String version) {
 
         db.updateBlacklist(species, version);
-
+        setAutoCompleteSearch();
         Toast.makeText(getBaseContext(), "Fetching Blacklist Success", Toast.LENGTH_LONG).show();
     }
 
