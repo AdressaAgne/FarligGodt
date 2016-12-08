@@ -140,7 +140,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         taxonLocationsApi.refreshQuery(taxonID);
-
+        LatLng current = new LatLng(latitude, longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 8));
         Log.v("blacklist", "you searched for " + text + " got id: " + taxonID);
     }
 
