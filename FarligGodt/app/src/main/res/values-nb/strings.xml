@@ -8,24 +8,12 @@
     <string name="title_activity_settings">Innstillinger</string>
     <string name="tryAgain">Prøv igjen</string>
     <string name="errorAlert">Kunne ikke laste inn arter, sjekk din internettilkobling</string>
-    <string name="back">Tilbake</string>
+    <string name="back">Lagre</string>
     <string name="radius">Radius: </string>
     <string name="nautical">Nautiske mil</string>
     <string name="miles">Britiske miles</string>
     <string name="km">km</string>
     <string name="distance_in">Avstand i:</string>
-    <string name="january">Januar</string>
-    <string name="july">Juli</string>
-    <string name="june">Juni</string>
-    <string name="february">Februar</string>
-    <string name="december">Desember</string>
-    <string name="august">August</string>
-    <string name="april">April</string>
-    <string name="march">Mars</string>
-    <string name="may">Mai</string>
-    <string name="months">Månter</string>
-    <string name="november">November</string>
-    <string name="october">Oktober</string>
-    <string name="september">September</string>
     <string name="search">Søk</string>
+    <string name="filter_by_current_season">Filtrer etter sesong</string>
 </resources>
