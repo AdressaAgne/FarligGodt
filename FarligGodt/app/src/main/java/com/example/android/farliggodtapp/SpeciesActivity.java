@@ -53,8 +53,8 @@ public class SpeciesActivity extends AppCompatActivity implements ImageCallback 
 
         setTitle(taxon.getName());
 
-        String imageURL = "https://farliggodt.agne.no" + taxon.getImage();
-        new FetchImage(this, imageURL);
+        String imageURL = taxon.getImage();
+        new FetchImage(this, imageURL, this);
 
         Log.v("blacklist", "image: " + taxon.getImage() + ", " + imageURL);
 

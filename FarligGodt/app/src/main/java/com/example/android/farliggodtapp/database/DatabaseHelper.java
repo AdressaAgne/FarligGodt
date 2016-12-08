@@ -101,7 +101,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] blacklist = new String[c.getCount() - 1];
 
         while(c.moveToNext()){
-            Log.v("blacklist", c.getString(c.getColumnIndex("image")));
             blacklist[c.getPosition() - 1] = c.getString(c.getColumnIndex("navn"));
         }
 

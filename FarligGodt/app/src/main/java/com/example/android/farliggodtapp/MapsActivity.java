@@ -44,7 +44,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Arrays;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, GoogleMap.OnMarkerClickListener, BlacklistCallback, VersionCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ApiCallback, BlacklistCallback, VersionCallback {
 
     private GoogleMap mMap = null;
 
@@ -71,6 +71,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private AutoCompleteTextView searchbar;
 
+    private Taxon[] speciesSaveList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,7 +182,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
 
             case R.id.action_search:
-                Log.v("blacklist", "search click");
+                taxonApi.refreshQuery(latitude, longitude, db.fetchType("radius"));
                 return true;
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
@@ -317,30 +318,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.clear();
         apiProgress.hide();
         apiProgress.dismiss();
-
+        speciesSaveList = taxons;
         for (Taxon taxon : taxons) {
 
             LatLng taxonLatLng = new LatLng(taxon.getLat(), taxon.getLng());
 
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(taxonLatLng)
-                    .title(taxon.getTaxonID())
+                    .title(taxon.getName())
+                    .snippet("Tap for more info")
             );
 
-            mMap.setOnMarkerClickListener(this);
+           marker.setTag(taxon.getTaxonID());
+
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(final Marker marker) {
+
+                    Intent i = new Intent(getApplicationContext(), SpeciesActivity.class);
+                    i.putExtra("taxonID", marker.getTag().toString());
+                    startActivity(i);
+
+                }
+
+            });
             //.icon(BitmapDescriptorFactory.fromResource(R.drawable.filnavn))
         }
 
-    }
-
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
-
-        Intent i = new Intent(this, SpeciesActivity.class);
-        i.putExtra("taxonID", marker.getTitle());
-        startActivity(i);
-
-        return false;
     }
 
     /**
