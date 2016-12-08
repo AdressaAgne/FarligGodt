@@ -183,6 +183,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.action_search:
                 Log.v("blacklist", "search click");
                 return true;
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

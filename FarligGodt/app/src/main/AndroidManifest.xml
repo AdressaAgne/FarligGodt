@@ -45,12 +45,25 @@
 
         <activity
             android:name=".SpeciesActivity"
-            android:label="Species">
+            android:label="Species"
+            android:parentActivityName="com.example.android.farliggodtapp.MapsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.farliggodtapp.MapsActivity" />
         </activity>
 
         <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="com.example.android.farliggodtapp.MapsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.farliggodtapp.MapsActivity" />
+        </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
     </application>
 

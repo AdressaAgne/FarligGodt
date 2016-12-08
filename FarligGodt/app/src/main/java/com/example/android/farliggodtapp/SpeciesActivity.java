@@ -29,6 +29,11 @@ public class SpeciesActivity extends AppCompatActivity implements ImageCallback 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specie);
 
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         String taxonID = getIntent().getStringExtra("taxonID");
 
         TextView name = (TextView) findViewById(R.id.name);

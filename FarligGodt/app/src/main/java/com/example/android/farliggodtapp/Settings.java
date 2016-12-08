@@ -2,6 +2,8 @@ package com.example.android.farliggodtapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +17,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.android.farliggodtapp.database.DatabaseHelper;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
-import static com.example.android.farliggodtapp.R.string.may;
-import static com.google.android.gms.analytics.internal.zzy.i;
 
 public class Settings extends AppCompatActivity {
 
@@ -29,12 +33,22 @@ public class Settings extends AppCompatActivity {
 
     private String type = "km";
     private String textType = "km";
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         db = new DatabaseHelper(this);
 
@@ -46,11 +60,11 @@ public class Settings extends AppCompatActivity {
         Button miles = (RadioButton) findViewById(R.id.miles);
         Button nautical = (RadioButton) findViewById(R.id.nautical);
 
-        if(db.fetchType("distanceType") == null){
+        if (db.fetchType("distanceType") == null) {
             db.updateOrInsert("distanceType", "km");
         }
 
-        switch (db.fetchType("distanceType")){
+        switch (db.fetchType("distanceType")) {
 
             case "km":
                 distanceType.check(R.id.km);
@@ -102,7 +116,6 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-
         //////////////// SEEKBAR FOR RADIUS ///////////////////////
 
         seekBarRadius = (SeekBar) findViewById(R.id.radius_bar);
@@ -124,10 +137,12 @@ public class Settings extends AppCompatActivity {
                 updateRangeText(i);
 
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 // TODO Auto-generated method stub
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
@@ -140,25 +155,28 @@ public class Settings extends AppCompatActivity {
 
         seasonCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
                     Log.v("tag", "check");
+                } else {
+                    Log.v("tag", "uncheck");
                 }
-                else
-                {
-                    Log.v("tag", "uncheck");                }
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     /**
      * Convert Km to miles or nautical miles
+     *
      * @param i
      */
-    public void updateRangeText(int i){
+    public void updateRangeText(int i) {
         double value = i;
 
-        switch (type){
+        switch (type) {
             case "Miles":
                 double km_to_miles = 0.621371192;
                 value = i * km_to_miles;
@@ -175,11 +193,47 @@ public class Settings extends AppCompatActivity {
 
     /**
      * open Main Maps Activity
+     *
      * @param view main
      */
-    public void openMain(View view){
+    public void openMain(View view) {
         Intent i = new Intent(this, MapsActivity.class);
         startActivity(i);
     }
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Settings Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
 }
