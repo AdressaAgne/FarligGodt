@@ -1,4 +1,4 @@
-# Java Assignment 2
+Farlig godt - Mobile Development Project 
 
 Team Whisky
 
